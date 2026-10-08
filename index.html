@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Farmácia Teste</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+}
+
+/* CABEÇALHO */
+
+header {
+    background: #E50914;
+    color: white;
+    text-align: center;
+    padding: 28px 20px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+/* HERO */
+
+.hero {
+    background: white;
+    text-align: center;
+    padding: 55px 20px; 45px;
+}
+
+.hero h2 {
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #666;
+}
+
+
+/* PRODUTOS */
+
+.produtos {
+    padding: 35px 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+.produtos h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.lista-produtos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.produto {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.produto h3 {
+    margin-top: 0;
+}
+
+.preco {
+    font-size: 24px;
+    font-weight: 900;
+    color: #087f5b;
+    margin: 15px 0;
+}
+
+.produto button {
+    background: #087f5b;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+/* BOTÃO DO CARRINHO */
+
+.botao-carrinho {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #087f5b;
+    color: white;
+    border: none;
+    font-size: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    z-index: 1000;
+}
+
+
+/* NÚMERO DO CARRINHO */
+
+#quantidade {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #E50914;
+    color: white;
+    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* CARRINHO */
+
+#carrinhoBox {
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 90px;
+    width: 350px;
+    max-width: calc(100% - 40px);
+    max-height: 75vh;
+    overflow-y: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.25);
+    z-index: 999;
+}
+
+.carrinho-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.carrinho-topo button {
+    border: none;
+    background: #ddd;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.item-carrinho {
+    border-bottom: 1px solid #ddd;
+    padding: 15px 0;
+}
+
+.quantidade-btn {
+    border: none;
+    background: #087f5b;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.remover-btn {
+    border: none;
+    background: #E50914;
+    color: white;
+    padding: 7px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.total {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.finalizar {
+    width: 100%;
+    background: #087f5b;
+    color: white;
+    border: none;
+    padding: 13px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+
+/* DADOS DO CLIENTE */
+
+.dados-pedido {
+    display: none;
+    margin-top: 15px;
+}
+
+.dados-pedido input,
+.dados-pedido select,
+.dados-pedido textarea {
+    width: 100%;
+    padding: 11px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 14px;
+    font-family: Arial;
+}
+
+.dados-pedido textarea {
+    resize: none;
+}
+
+
+/* RODAPÉ */
+
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    background: #222;
+    color: white;
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>Farmácia Teste</h1>
+
+</header>
+
+
+<section class="hero">
+
+<img 
+src="https://images.unsplash.com/photo-1585435557343-3b092031a831?auto=format&fit=crop&w=1200&q=80"
+style="
+width:100%;
+max-width:900px;
+height:280px;
+object-fit:cover;
+border-radius:16px;
+display:block;
+margin:0 auto 25px;
+"
+>
+
+<h2>Cuide da sua saúde</h2>
+
+<p>
+Produtos de qualidade com facilidade e segurança.
+</p>
+
+</section>
+
+
+<section class="produtos">
+<div class="busca">
+
+    <input
+        type="text"
+        id="buscaProduto"
+        placeholder="🔍 Buscar produto..."
+        onkeyup="buscarProduto()"
+    >
+
+</div>
+<h2>Nossos produtos</h2>
+
+
+<div class="lista-produtos">
+
+
+<div class="produto">
+
+<h3>Kit Primeiros Socorros</h3>
+
+<p>
+Kit básico para primeiros cuidados.
+</p>
+
+<div class="preco">
+R$29,90
+</div>
+
+<button onclick="adicionarProduto('Kit Primeiros Socorros', 29.90)">
+Comprar
+</button>
+
+</div>
+
+
+
+<div class="produto">
+
+<h3>Vitamina C</h3>
+
+<p>
+Vitamina C para complementar sua rotina.
+</p>
+
+<div class="preco">
+R$39,90
+</div>
+
+<button onclick="adicionarProduto('Vitamina C', 39.90)">
+Comprar
+</button>
+
+</div>
+
+
+
+<div class="produto">
+
+<h3>Produto de Higiene</h3>
+
+<p>
+Produto para cuidados pessoais.
+</p>
+
+<div class="preco">
+R$24,90
+</div>
+
+<button onclick="adicionarProduto('Produto de Higiene', 24.90)">
+Comprar
+</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- CARRINHO -->
+
+<div id="carrinhoBox">
+
+
+<div class="carrinho-topo">
+
+<h2>🛒 Carrinho</h2>
+
+<button onclick="abrirCarrinho()">
+Fechar
+</button>
+
+</div>
+
+
+<div id="listaCarrinho">
+Seu carrinho está vazio.
+</div>
+
+
+<div class="total">
+
+Total:
+R$
+<span id="total">0,00</span>
+
+</div>
+
+
+<button class="finalizar" onclick="mostrarDados()">
+Finalizar compra
+</button>
+
+
+
+<!-- DADOS -->
+
+<div class="dados-pedido" id="dadosPedido">
+
+
+<input
+type="text"
+id="nomeCliente"
+placeholder="Seu nome"
+>
+
+
+<input
+type="text"
+id="enderecoCliente"
+placeholder="Seu endereço"
+>
+
+
+<input
+type="text"
+id="telefoneCliente"
+placeholder="Seu telefone"
+>
+
+
+<select id="pagamentoCliente">
+
+<option value="">
+Forma de pagamento
+</option>
+
+<option value="Pix">
+Pix
+</option>
+
+<option value="Dinheiro">
+Dinheiro
+</option>
+
+<option value="Cartão">
+Cartão
+</option>
+
+</select>
+
+
+<input
+type="text"
+id="trocoCliente"
+placeholder="Troco para quanto?"
+>
+
+
+<textarea
+id="observacaoCliente"
+rows="3"
+placeholder="Observação do pedido"
+></textarea>
+
+
+<button class="finalizar" onclick="enviarPedido()">
+
+📲 Enviar pedido pelo WhatsApp
+
+</button>
+
+
+</div>
+
+</div>
+
+
+
+<!-- BOTÃO CARRINHO -->
+
+<button class="botao-carrinho" onclick="abrirCarrinho()">
+
+🛒
+
+<span id="quantidade">
+0
+</span>
+
+</button>
+
+
+
+<footer>
+
+Farmácia Teste © 2026
+
+</footer>
+
+
+
+<script>
+
+let carrinho = [];
+
+
+function adicionarProduto(nome, preco) {
+
+let produto = carrinho.find(function(item) {
+
+return item.nome === nome;
+
+});
+
+
+if (produto) {
+
+produto.quantidade++;
+
+} else {
+
+carrinho.push({
+
+nome: nome,
+preco: preco,
+quantidade: 1
+
+});
+
+}
+
+
+atualizarCarrinho();
+
+document.getElementById("carrinhoBox").style.display = "block";
+
+}
+
+
+
+function aumentarQuantidade(index) {
+
+carrinho[index].quantidade++;
+
+atualizarCarrinho();
+
+}
+
+
+
+function diminuirQuantidade(index) {
+
+carrinho[index].quantidade--;
+
+
+if (carrinho[index].quantidade <= 0) {
+
+carrinho.splice(index, 1);
+
+}
+
+
+atualizarCarrinho();
+
+}
+
+
+
+function removerProduto(index) {
+
+carrinho.splice(index, 1);
+
+atualizarCarrinho();
+
+}
+
+
+
+function atualizarCarrinho() {
+
+let quantidadeTotal = 0;
+
+let total = 0;
+
+
+carrinho.forEach(function(produto) {
+
+quantidadeTotal += produto.quantidade;
+
+total += produto.preco * produto.quantidade;
+
+});
+
+
+document.getElementById("quantidade").innerText =
+quantidadeTotal;
+
+
+document.getElementById("total").innerText =
+total.toFixed(2).replace(".", ",");
+
+
+let lista =
+document.getElementById("listaCarrinho");
+
+
+if (carrinho.length === 0) {
+
+lista.innerHTML =
+"Seu carrinho está vazio.";
+
+document.getElementById("dadosPedido").style.display =
+"none";
+
+return;
+
+}
+
+
+let html = "";
+
+
+carrinho.forEach(function(produto, index) {
+
+let subtotal =
+produto.preco * produto.quantidade;
+
+
+html += `
+
+<div class="item-carrinho">
+
+<strong>
+${produto.nome}
+</strong>
+
+<br>
+
+R$
+${subtotal.toFixed(2).replace(".", ",")}
+
+<br><br>
+
+
+<button
+class="quantidade-btn"
+onclick="diminuirQuantidade(${index})"
+>
+−
+</button>
+
+
+<strong style="margin:0 10px;">
+${produto.quantidade}
+</strong>
+
+
+<button
+class="quantidade-btn"
+onclick="aumentarQuantidade(${index})"
+>
++
+</button>
+
+
+<button
+class="remover-btn"
+onclick="removerProduto(${index})"
+>
+🗑️
+</button>
+
+
+</div>
+
+`;
+
+});
+
+
+lista.innerHTML = html;
+
+}
+
+
+
+function abrirCarrinho() {
+
+let box =
+document.getElementById("carrinhoBox");
+
+
+if (box.style.display === "block") {
+
+box.style.display = "none";
+
+} else {
+
+box.style.display = "block";
+
+}
+
+}
+
+
+
+function mostrarDados() {
+
+if (carrinho.length === 0) {
+
+alert("Seu carrinho está vazio.");
+
+return;
+
+}
+
+
+document.getElementById("dadosPedido").style.display =
+"block";
+
+}
+
+
+
+function enviarPedido() {
+
+let nome =
+document.getElementById("nomeCliente").value.trim();
+
+let endereco =
+document.getElementById("enderecoCliente").value.trim();
+
+let telefone =
+document.getElementById("telefoneCliente").value.trim();
+
+let pagamento =
+document.getElementById("pagamentoCliente").value;
+
+let troco =
+document.getElementById("trocoCliente").value.trim();
+
+let observacao =
+document.getElementById("observacaoCliente").value.trim();
+
+
+if (nome === "") {
+
+alert("Digite seu nome.");
+
+return;
+
+}
+
+
+if (endereco === "") {
+
+alert("Digite seu endereço.");
+
+return;
+
+}
+
+
+if (telefone === "") {
+
+alert("Digite seu telefone.");
+
+return;
+
+}
+
+
+if (pagamento === "") {
+
+alert("Escolha a forma de pagamento.");
+
+return;
+
+}
+
+
+let mensagem =
+"Olá! Gostaria de fazer um pedido:\n\n";
+
+
+let total = 0;
+
+
+carrinho.forEach(function(produto) {
+
+let subtotal =
+produto.preco * produto.quantidade;
+
+
+mensagem +=
+"• " +
+produto.nome +
+" x" +
+produto.quantidade +
+" - R$ " +
+subtotal.toFixed(2).replace(".", ",") +
+"\n";
+
+
+total += subtotal;
+
+});
+
+
+mensagem +=
+"\n*Total: R$ " +
+total.toFixed(2).replace(".", ",") +
+"*";
+
+
+mensagem +=
+"\n\n*Cliente:* " +
+nome;
+
+
+mensagem +=
+"\n*Endereço:* " +
+endereco;
+
+
+mensagem +=
+"\n*Telefone:* " +
+telefone;
+
+
+mensagem +=
+"\n*Pagamento:* " +
+pagamento;
+
+
+if (troco !== "") {
+
+mensagem +=
+"\n*Troco para:* R$ " +
+troco;
+
+}
+
+
+if (observacao !== "") {
+
+mensagem +=
+"\n*Observação:* " +
+observacao;
+
+}
+
+
+let numero =
+"5561982453094";
+
+
+let link =
+"https://wa.me/" +
+numero +
+"?text=" +
+encodeURIComponent(mensagem);
+
+
+window.open(link, "_blank");
+
+}
+
+</script>
+
+
+</body>
+
+</html>
